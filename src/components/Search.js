@@ -4,13 +4,13 @@ import axios from 'axios';
 const Search = () => {
     //create new piece of state
     const [term,setTerm] = useState('');
+    const [results, setResults] = useState([]);
 
     //useEffect, similar to componentDidMount
     //second argument tells when our code gets executed
-    //should be an empty array, array with something inside, or nothing at all
     useEffect(() => {
         const search = async () => {
-            await axios.get('https://en.wikipedia.org/w/api.php', {
+            const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
                 params: {
                     action: 'query',
                     list: 'search',
@@ -19,9 +19,12 @@ const Search = () => {
                     srsearch: term,
                 }
             });
-        };
 
-        search();
+            setResults(data.query.search)
+        };
+        if (term){
+            search();
+        }
     }, [term]);
 
     return (
