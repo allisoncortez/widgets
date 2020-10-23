@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Search = () => {
-    //create new piece of state
     const [term,setTerm] = useState('');
     const [results, setResults] = useState([]);
 
@@ -22,8 +21,20 @@ const Search = () => {
 
             setResults(data.query.search)
         };
-        if (term){
+        // if this is the first time our component renders, we want to do a search right away
+        if (term && !results.length) {
             search();
+        } else {
+        //if it's not first time, we want to setTimeout && return the clearTimeout
+            const timeoutId = setTimeout(() => {
+                if (term){
+                    search();
+                }
+            }, 500);
+    
+            return () => {
+                clearTimeout(timeoutId);
+            };
         }
     }, [term]);
 
