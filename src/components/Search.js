@@ -5,8 +5,7 @@ const Search = () => {
     const [term,setTerm] = useState('');
     const [results, setResults] = useState([]);
 
-    //useEffect, similar to componentDidMount
-    //second argument tells when our code gets executed
+    //useEffect, similar to componentDidMount  //second argument tells when our code gets executed
     useEffect(() => {
         const search = async () => {
             const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
