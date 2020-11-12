@@ -2,12 +2,24 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Search = () => {
-    const [term,setTerm] = useState('');
+    const [term,setTerm] = useState('programming');
+    const [debouncedTerm,setDebouncedTerm] = useState(term)
     const [results, setResults] = useState([]);
 
-    //useEffect, similar to componentDidMount
-    //second argument tells when our code gets executed
     useEffect(() => {
+        //will run anytime that term changes(anytime user types into the input)
+        const timerId = setTimeout(() => {
+            //when this changed actually goes through, we'll run our second useEffect
+            setDebouncedTerm(term);
+        }, 1000);
+
+        return () => {
+            clearTimeout(timerId);
+        };
+    }, [term]);
+
+    useEffect(() => {
+        //call search, will run when we first render our component
         const search = async () => {
             const { data } = await axios.get('https://en.wikipedia.org/w/api.php', {
                 params: {
@@ -15,28 +27,36 @@ const Search = () => {
                     list: 'search',
                     origin: '*',
                     format: 'json',
-                    srsearch: term,
+                    srsearch: debouncedTerm,
                 }
             });
 
-            setResults(data.query.search)
+            setResults(data.query.search);
         };
-        // if this is the first time our component renders, we want to do a search right away
-        if (term && !results.length) {
-            search();
-        } else {
-        //if it's not first time, we want to setTimeout && return the clearTimeout
-            const timeoutId = setTimeout(() => {
-                if (term){
-                    search();
-                }
-            }, 500);
+
+        search();
+    }, [debouncedTerm])
+
+    //useEffect, similar to componentDidMount
+    //second argument tells when our code gets executed
+
+    // useEffect(() => {
+    //     // if this is the first time our component renders, we want to do a search right away
+    //     if (term && !results.length) {
+    //         search();
+    //     } else {
+    //     //if it's not first time, we want to setTimeout && return the clearTimeout
+    //         const timeoutId = setTimeout(() => {
+    //             if (term){
+    //                 search();
+    //             }
+    //         }, 500);
     
-            return () => {
-                clearTimeout(timeoutId);
-            };
-        }
-    }, [term]);
+    //         return () => {
+    //             clearTimeout(timeoutId);
+    //         };
+    //     }
+    // }, [term]);
 
     const renderedResults = results.map((result) => {
         return (
