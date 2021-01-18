@@ -7,9 +7,13 @@ const Dropdown = ({ options,selected, onSelectedChange }) => {
     useEffect(() => {
         document.body.addEventListener('click', (event) => {
             // console.log(event.target);
+            //if element that was clicked on is INSIDE our component, then we'll return early, we don't do anything else.
+            //see line 40
+            if (ref.current && ref.current.contains(event.target)) {
+               return; 
+            }
+            // if element is outside of the dropdown, we want to close the dropdown
             setOpen(false);
-            //when a user clicks, we want to close the dropdown
-            
         });
     }, [])
 
@@ -27,7 +31,7 @@ const Dropdown = ({ options,selected, onSelectedChange }) => {
             </div>
     );
     });
-    console.log(ref.current)
+    
     return (
         <div ref={ref} className="ui form">
             <div className="field">
