@@ -4,11 +4,25 @@ const Dropdown = ({ options,selected, onSelectedChange }) => {
     const [open, setOpen] = useState(false);
     const ref = useRef();
 
+    //this will run when we click on something inside the DOM
+    // useEffect(() => {
+    //     const onBodyClick = (event) => {
+    //         if (ref.current && ref.current.contains(event.target)) {
+    //             return;
+    //         }
+    //         // if element clicked is outside the dropdown, we want to close the dropdown
+    //         setOpen(false);
+    //     }
+
+    //     document.body.addEventListener('click', onBodyClick);
+
+    //     return () => {
+    //         document.body.removeEventListener('click', onBodyClick);
+    //     };
+    // }, []);
+
     useEffect(() => {
         document.body.addEventListener('click', (event) => {
-            // console.log(event.target);
-            //if element that was clicked on is INSIDE our component, then we'll return early, we don't do anything else.
-            //see line 40
             if (ref.current && ref.current.contains(event.target)) {
                return; 
             }
